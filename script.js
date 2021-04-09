@@ -12,7 +12,9 @@ class Calculator {
   }
 
   //deletes last added number
-  delete() {}
+  delete() {
+    this.currOperand = this.currOperand.toString().slice(0, -1);
+  }
 
   //adds a number on a screen
   appendNumber(number) {
@@ -32,12 +34,38 @@ class Calculator {
   }
 
   //takes our values and computes a single value that we display
-  compute() {}
+  compute() {
+    let computation;
+    const prev = parseFloat(this.prevOperand);
+    const curr = parseFloat(this.currOperand);
+    if (isNaN(prev) || isNaN(curr)) return;
+    switch (this.operation) {
+      case "+":
+        computation = prev + curr;
+        break;
+      case "-":
+        computation = prev - curr;
+        break;
+      case "*":
+        computation = prev * curr;
+        break;
+      case "÷":
+        computation = prev / curr;
+        break;
+      default:
+        return;
+    }
+    this.currOperand = computation;
+    this.operation = undefined;
+    this.prevOperand = "";
+  }
 
   //updates values inside our output
   updateDisplay() {
     this.currOperandTextElement.innerText = this.currOperand;
-    this.prevOperandTextElement.innerText = this.prevOperand;
+    if (this.operation != null) {
+      this.prevOperandTextElement.innerText = `${this.prevOperand} ${this.operation}`;
+    }
   }
 }
 
@@ -66,4 +94,19 @@ operationButtons.forEach((button) => {
     calculator.chooseOperation(button.innerText);
     calculator.updateDisplay();
   });
+});
+
+equalsButton.addEventListener("click", (button) => {
+  calculator.compute();
+  calculator.updateDisplay();
+});
+
+allClearButton.addEventListener("click", (button) => {
+  calculator.clear();
+  calculator.updateDisplay();
+});
+
+deleteButton.addEventListener("click", (button) => {
+  calculator.delete();
+  calculator.updateDisplay();
 });
