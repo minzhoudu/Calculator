@@ -8,7 +8,7 @@ class Calculator {
   clear() {
     this.currOperand = "";
     this.prevOperand = "";
-    this.operation - undefined;
+    this.operation = undefined;
   }
 
   //deletes last added number
@@ -60,11 +60,38 @@ class Calculator {
     this.prevOperand = "";
   }
 
+  //gets displayed number to devide it with commas
+  getDisplayedNumber(number) {
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split(".")[0]);
+    const decimalDigits = stringNumber.split(".")[1];
+    let integerDisplay;
+    if (isNaN(integerDigits)) {
+      integerDisplay = "";
+    } else {
+      integerDisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0,
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`;
+    } else {
+      return integerDisplay;
+    }
+  }
+
   //updates values inside our output
   updateDisplay() {
-    this.currOperandTextElement.innerText = this.currOperand;
+    this.currOperandTextElement.innerText = this.getDisplayedNumber(
+      this.currOperand
+    );
+
     if (this.operation != null) {
-      this.prevOperandTextElement.innerText = `${this.prevOperand} ${this.operation}`;
+      this.prevOperandTextElement.innerText = `${this.getDisplayedNumber(
+        this.prevOperand
+      )} ${this.operation}`;
+    } else {
+      prevOperandTextElement.innerText = "";
     }
   }
 }
